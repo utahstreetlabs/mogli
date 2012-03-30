@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'mogli'
-  s.version = '0.0.36.1.copious'
+  s.version = '0.0.36.2.copious'
   s.summary = 'Open Graph Library for Ruby'
   s.description = 'Simple library for accessing the Facebook Open Graph API'
   s.files = Dir['lib/**/*.rb']
@@ -9,7 +9,7 @@ spec = Gem::Specification.new do |s|
   s.author = 'Mike Mangino'
   s.email = 'mmangino@elevatedrails.com'
   s.homepage = 'http://developers.facebook.com/docs/api'
-  s.add_dependency 'hashie', '~> 1.1.0'
+  s.add_dependency 'hashie', '~> 1'
   s.add_dependency 'httmultiparty', '>= 0.3.6'
   s.add_dependency 'httparty', '>= 0.4.3'
   s.add_dependency 'multi_json', '~> 1.0.3'
