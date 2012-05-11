@@ -111,6 +111,11 @@ module Mogli
       client
     end
 
+    def self.exchange_access_token_as_application(client_id, secret, token)
+      authenticator = Mogli::Authenticator.new(client_id, secret, nil)
+      access_data = authenticator.exchange_access_token_as_application(token)
+    end
+
     def post(path,klass,body_args)
       data = self.class.post(api_path(path),:body=>default_params.merge(body_args))
       map_data(data,klass)
@@ -211,7 +216,7 @@ module Mogli
     end
 
     def determine_class(klass_or_klasses,data)
-      if data.respond_to?(:has_key?) && data.has_key('type') &&
+      if data.respond_to?(:has_key?) && data.has_key?('type') &&
                                          klass_or_klasses == Mogli::Model
         return constantize_string(data['type'])
       end

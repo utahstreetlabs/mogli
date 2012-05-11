@@ -37,6 +37,16 @@ describe Mogli::Client do
         client.access_token.should == '123456|3SDdfgdfgv0bbEvYjBH5tJtl-dcBdsfgo'
       end
 
+      it "allows exchanging an access token as an application" do
+        authenticator = Mogli::Authenticator.new('123456', 'secret', nil)
+        authenticator.should_receive(:exchange_access_token_as_application).
+          and_return({'access_token' => "123456|3SDdfgdfgv0bbEvYjBH5tJtl-dcBdsfgo"})
+        Mogli::Authenticator.should_receive(:new).and_return(authenticator)
+        access_data = Mogli::Client.exchange_access_token_as_application(
+                   '12345', 'secret', 'myaccesstoken')
+        access_data['access_token'].should == '123456|3SDdfgdfgv0bbEvYjBH5tJtl-dcBdsfgo'
+      end
+
       it "doesn't bail when the session key is stale" do
         Time.stub!(:now).and_return(1270000000)
         authenticator = Mogli::Authenticator.new('123456', 'secret', nil)
