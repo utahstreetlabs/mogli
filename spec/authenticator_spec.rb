@@ -104,6 +104,26 @@ describe Mogli::Authenticator do
 
   end
 
+  it "can exchange an access_token for one with a longer expiry" do
+    response = mock('HTTParty::Response',
+      :parsed_response => "access_token=myaccesstoken&expires=5184000",
+      :code => 200)
+
+    Mogli::Client.should_receive(:post).
+      with("https://graph.facebook.com/oauth/access_token",
+           :body => {
+             :grant_type => "fb_exchange_token",
+             :client_id => "123456",
+             :client_secret => "secret",
+             :fb_exchange_token => "myoldaccesstoken"
+          }).
+      and_return(response)
+
+    authenticator.
+      exchange_access_token_as_application("myoldaccesstoken").
+      should == {"access_token" => "myaccesstoken", "expires" => 5184000}
+  end
+
   context "Oauth2" do
     let :oauth2_authenticator do
       Mogli::Authenticator.new("123456","secret",nil)
