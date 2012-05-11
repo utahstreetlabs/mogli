@@ -50,6 +50,22 @@ module Mogli
       response.parsed_response.split("=").last
     end
 
+    def exchange_access_token_as_application(old_token)
+      client = Mogli::Client.new
+      response = client.class.post(client.api_path('oauth/access_token'),
+        :body=> {
+          :grant_type => 'fb_exchange_token',
+          :client_id => client_id,
+          :client_secret => secret,
+          :fb_exchange_token => old_token
+        }
+      )
+      raise_exception_if_required(response)
+      h = Hash[*response.parsed_response.split(/[&=]/).collect { |v| [v] }.flatten ]
+      h['expires'] &&= h['expires'].to_i
+      h
+    end
+
     def raise_exception_if_required(response)
       raise Mogli::Client::HTTPException if response.code != 200
     end
