@@ -4,8 +4,8 @@ module Mogli
 
     define_properties :username, :first_name, :last_name, :link, :about, :birthday, :gender,
           :email, :website, :timezone, :updated_time, :verified, :political, :bio,
-          :relationship_status, :locale, :religion, :quotes, :third_party_id,
-          :inspirational_people, :sports, :with, :middle_name, :category
+          :interested_in, :relationship_status, :locale, :religion, :quotes, :third_party_id,
+          :inspirational_people, :sports, :with, :middle_name, :category, :installed
 
     def self.recognize?(hash)
       !hash.has_key?("category")
@@ -33,6 +33,8 @@ module Mogli
     has_association :home, "Post"
     has_association :accounts, "Page"
     has_association :apprequests, "AppRequest"
+
+    has_association :events, "Event"
 
     attr_reader :extended_permissions
 

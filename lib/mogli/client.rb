@@ -159,12 +159,16 @@ module Mogli
     def extract_hash_or_array(hash_or_array,klass)
       hash_or_array = hash_or_array.parsed_response if hash_or_array.respond_to?(:parsed_response)
       return nil if hash_or_array == false
+      return []  if hash_or_array == {"count" => 0}
       return hash_or_array if hash_or_array.nil? or hash_or_array.kind_of?(Array)
       return extract_fetching_array(hash_or_array,klass) if is_fetching_array?(hash_or_array)
+      # Facebook doesn't return numbers or booleans in an object or list
+      # container; this will catch the number, "true" and "false" response case
       return hash_or_array
     end
 
     def is_fetching_array?(hash)
+      return false unless hash.respond_to? :has_key?
       hash.has_key?("data") and hash["data"].instance_of?(Array)
     end
 
@@ -173,6 +177,7 @@ module Mogli
       f.concat(hash["data"])
       f.client = self
       f.classes = Array(klass)
+      f.total_count = hash["count"]
       if paging=hash["paging"]
         f.next_url = URI.encode paging["next"] unless paging["next"].nil?
         f.previous_url = URI.encode paging["previous"] unless paging["previous"].nil?
@@ -206,7 +211,10 @@ module Mogli
     end
 
     def determine_class(klass_or_klasses,data)
-      return constantize_string(data['type']) if data.key?('type') && klass_or_klasses == Mogli::Model
+      if data.respond_to?(:has_key?) && data.has_key('type') &&
+                                         klass_or_klasses == Mogli::Model
+        return constantize_string(data['type'])
+      end
       klasses = Array(klass_or_klasses).map { |k| constantize_string(k)}
       klasses.detect {|klass| klass.recognize?(data)} || klasses.first
     end
