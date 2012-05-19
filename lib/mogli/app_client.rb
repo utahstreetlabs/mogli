@@ -13,7 +13,11 @@ module Mogli
     def subscription_url
       "https://graph.facebook.com/#{application_id}/subscriptions"
     end
-    
+
+    def test_users_path
+      "#{application_id}/accounts/test-users"
+    end
+
     def subscribe_to_model(model,options)
       options_to_send = options.dup
       options_to_send[:fields] = Array(options[:fields]).join(",")
