@@ -68,7 +68,6 @@ module Mogli
       :user_location,
       :user_notes,
       :user_online_presence,
-      :user_photo_video_tags,
       :user_photos,
       :user_relationships,
       :user_relationship_details,
